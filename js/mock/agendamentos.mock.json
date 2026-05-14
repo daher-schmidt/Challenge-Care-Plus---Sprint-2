@@ -1,0 +1,52 @@
+[
+  {
+    "agendamentoId": "AGD001",
+    "medico": "Dra. Ana Santos",
+    "especialidade": "Odontologia",
+    "local": "Clínica Care Contact",
+    "dataInicio": "2025-10-22T14:00:00",
+    "dataFim": "2025-10-22T15:00:00",
+    "status": "AGENDADO",
+    "checkinPontual": false
+  },
+  {
+    "agendamentoId": "AGD002",
+    "medico": "Dra. Ana Santos",
+    "especialidade": "Ortodontia",
+    "local": "Clínica Care Contact",
+    "dataInicio": "2025-10-08T09:00:00",
+    "dataFim": "2025-10-08T10:00:00",
+    "status": "CONCLUIDO",
+    "checkinPontual": true
+  },
+  {
+    "agendamentoId": "AGD003",
+    "medico": "Dra. Ana Santos",
+    "especialidade": "Implantes",
+    "local": "Clínica Care Contact",
+    "dataInicio": "2025-09-15T10:00:00",
+    "dataFim": "2025-09-15T11:30:00",
+    "status": "CONFIRMADO",
+    "checkinPontual": true
+  },
+  {
+    "agendamentoId": "AGD004",
+    "medico": "Dra. Ana Santos",
+    "especialidade": "Estética",
+    "local": "Clínica Care Contact",
+    "dataInicio": "2025-08-20T14:00:00",
+    "dataFim": "2025-08-20T15:00:00",
+    "status": "CANCELADO",
+    "checkinPontual": false
+  },
+  {
+    "agendamentoId": "AGD005",
+    "medico": "Dra. Ana Santos",
+    "especialidade": "Profilaxia",
+    "local": "Clínica Care Contact",
+    "dataInicio": "2025-11-05T09:00:00",
+    "dataFim": "2025-11-05T09:30:00",
+    "status": "REAGENDADO",
+    "checkinPontual": false
+  }
+]

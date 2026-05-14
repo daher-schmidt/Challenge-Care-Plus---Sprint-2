@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Care Contact — Meu Perfil</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="../css/shared.css" rel="stylesheet" />
+  <style>
+    .perfil-avatar {
+      width: 88px; height: 88px;
+      background: var(--cc-primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: 800;
+    }
+    .perfil-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--cc-border);
+    }
+    .perfil-field:last-child { border-bottom: none; }
+    .perfil-field-label { font-size: 12px; font-weight: 700; color: var(--cc-muted); }
+    .perfil-field-value { font-size: 15px; font-weight: 600; color: var(--cc-text); }
+    .perfil-section-title {
+      font-size: 13px; font-weight: 800; color: var(--cc-muted);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: 16px; margin-top: 28px;
+    }
+    .btn-editar {
+      background: var(--cc-primary); color: white; border: none;
+      border-radius: var(--cc-radius); padding: 12px 28px;
+      font-weight: 700; font-size: 14px; cursor: pointer;
+      font-family: var(--cc-font); transition: background 0.2s, transform 0.15s;
+    }
+    .btn-editar:hover { background: var(--cc-primary-dark); transform: translateY(-1px); }
+  </style>
+</head>
+<body>
+<nav id="cc-navbar"></nav>
+
+<div class="d-grid" style="grid-template-columns:300px 1fr;min-height:calc(100vh - 65px);" id="layout">
+  <div class="bg-white border-end p-4" id="sidebar">
+    <div class="d-flex gap-2 mb-3 flex-wrap">
+      <button class="sidebar-tab" onclick="window.location.href='dashboard.html'">Home</button>
+      <button class="sidebar-tab" onclick="window.location.href='dashboard.html'">Consultas</button>
+      <button class="sidebar-tab active" onclick="window.location.href='perfil.html'">Perfil</button>
+    </div>
+    <div class="notif-title">Notificações</div>
+    <div id="notifCard" class="notif-card">
+      <div style="font-size:28px;margin-bottom:8px;">⏳</div>
+      Carregando notificações...
+    </div>
+    <span class="ai-badge">🧠 Powered by AI — em breve</span>
+  </div>
+
+  <div class="p-4 p-md-5">
+    <div class="fw-bold mb-1" style="font-size:24px;color:var(--cc-primary);">Meu Perfil</div>
+    <div class="mb-4" style="color:var(--cc-muted);font-size:14px;">Gerencie suas informações pessoais</div>
+
+    <div class="cc-card p-4 d-flex align-items-center gap-4 mb-4">
+      <div class="perfil-avatar" id="avatarInitial">M</div>
+      <div>
+        <div style="font-size:22px;font-weight:800;color:var(--cc-primary);" id="perfilNome">Marcos Silva</div>
+        <div style="font-size:13px;color:var(--cc-muted);margin-top:4px;">Paciente desde 2023</div>
+        <div class="mt-2" style="background:#EFF6FF;color:#2563EB;font-size:12px;font-weight:800;padding:6px 14px;border-radius:20px;display:inline-block;">⭐ Plano Premium</div>
+      </div>
+    </div>
+
+    <div class="cc-card p-4">
+      <div class="perfil-section-title">Informações Pessoais</div>
+      <div class="perfil-field">
+        <span class="perfil-field-label">Nome completo</span>
+        <span class="perfil-field-value" id="fieldNome">Marcos Silva</span>
+      </div>
+      <div class="perfil-field">
+        <span class="perfil-field-label">E-mail</span>
+        <span class="perfil-field-value">marcos.silva@email.com</span>
+      </div>
+      <div class="perfil-field">
+        <span class="perfil-field-label">CPF</span>
+        <span class="perfil-field-value" id="fieldCpf">123.456.789-00</span>
+      </div>
+      <div class="perfil-field">
+        <span class="perfil-field-label">Data de Nascimento</span>
+        <span class="perfil-field-value">15/03/1990</span>
+      </div>
+      <div class="perfil-field">
+        <span class="perfil-field-label">Telefone</span>
+        <span class="perfil-field-value">(11) 98765-4321</span>
+      </div>
+
+      <div class="perfil-section-title">Endereço</div>
+      <div class="perfil-field">
+        <span class="perfil-field-label">Rua</span>
+        <span class="perfil-field-value">Av. Paulista, 1000</span>
+      </div>
+      <div class="perfil-field">
+        <span class="perfil-field-label">Cidade</span>
+        <span class="perfil-field-value">São Paulo — SP</span>
+      </div>
+      <div class="perfil-field">
+        <span class="perfil-field-label">CEP</span>
+        <span class="perfil-field-value">01310-100</span>
+      </div>
+
+      <div class="mt-4">
+        <button class="btn-editar" onclick="showToast('Funcionalidade em breve!', 'info')">✏️ Editar Perfil</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/navbar.js"></script>
+<script src="../js/toast.js"></script>
+<script>
+  renderNavbar('Perfil');
+  const user = JSON.parse(localStorage.getItem('cc_user') || '{"nome":"Marcos","cpf":""}');
+  if (user.nome) {
+    document.getElementById('perfilNome').textContent = user.nome + ' Silva';
+    document.getElementById('fieldNome').textContent = user.nome + ' Silva';
+    document.getElementById('avatarInitial').textContent = user.nome[0].toUpperCase();
+  }
+  if (user.cpf) document.getElementById('fieldCpf').textContent = user.cpf;
+
+  setTimeout(() => {
+    document.getElementById('notifCard').innerHTML = `
+      <div style="font-size:20px;margin-bottom:8px;">✅</div>
+      Perfil carregado com sucesso!
+    `;
+  }, 800);
+
+  function checkLayout() {
+    const layout = document.getElementById('layout');
+    const sidebar = document.getElementById('sidebar');
+    if (window.innerWidth < 768) {
+      layout.style.gridTemplateColumns = '1fr';
+      sidebar.classList.add('border-bottom');
+      sidebar.classList.remove('border-end');
+    } else {
+      layout.style.gridTemplateColumns = '300px 1fr';
+      sidebar.classList.remove('border-bottom');
+      sidebar.classList.add('border-end');
+    }
+  }
+  checkLayout();
+  window.addEventListener('resize', checkLayout);
+</script>
+</body>
+</html>

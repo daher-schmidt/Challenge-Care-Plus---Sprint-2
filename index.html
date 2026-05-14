@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Care Contact — Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cc-primary: #1E3A8A;
+      --cc-primary-dark: #152A63;
+      --cc-accent: #2563EB;
+      --cc-success: #14B8A6;
+      --cc-warning: #F59E0B;
+      --cc-danger: #EF4444;
+      --cc-bg: #F8FAFC;
+      --cc-font: 'Plus Jakarta Sans', sans-serif;
+    }
+    * { font-family: var(--cc-font); }
+    body { background: var(--cc-bg); min-height: 100vh; }
+
+    .login-wrap {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .login-left {
+      background: linear-gradient(145deg, #1E3A8A 0%, #2563EB 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 48px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .login-left::before {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+      top: -100px; right: -100px;
+    }
+    .login-left::after {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+      bottom: -80px; left: -80px;
+    }
+    .login-left-content { position: relative; z-index: 1; text-align: center; }
+    .login-tooth { font-size: 72px; margin-bottom: 24px; display: block; }
+    .login-brand { font-size: 36px; font-weight: 800; margin-bottom: 16px; }
+    .login-tagline { font-size: 15px; opacity: 0.85; line-height: 1.7; max-width: 320px; margin: 0 auto; }
+
+    .login-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 32px;
+    }
+    .login-box {
+      width: 100%;
+      max-width: 400px;
+    }
+    .cc-logo-badge {
+      display: inline-block;
+      background: var(--cc-primary);
+      color: white;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      line-height: 1.4;
+      margin-bottom: 28px;
+    }
+    .login-box h2 { font-size: 28px; font-weight: 800; color: #1F2937; margin-bottom: 6px; }
+    .login-box p { color: #6B7280; font-size: 14px; margin-bottom: 28px; }
+
+    .form-label { font-weight: 700; font-size: 13px; color: #374151; margin-bottom: 6px; }
+    .form-control {
+      border: 2px solid #E5E7EB;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+    .form-control:focus {
+      border-color: var(--cc-accent);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+    .form-error { font-size: 12px; color: var(--cc-danger); margin-top: 4px; display: none; }
+    .form-error.show { display: block; }
+
+    .btn-login {
+      width: 100%;
+      background: var(--cc-primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      margin-top: 8px;
+    }
+    .btn-login:hover { background: var(--cc-primary-dark); transform: translateY(-1px); }
+
+    .login-links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 16px;
+    }
+    .login-links a { font-size: 13px; color: var(--cc-accent); font-weight: 600; text-decoration: none; }
+    .login-links a:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .login-wrap { grid-template-columns: 1fr; }
+      .login-left { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="login-wrap">
+  <div class="login-left">
+    <div class="login-left-content">
+      <span class="login-tooth">🦷</span>
+      <div class="login-brand">Care Contact</div>
+      <p class="login-tagline">Revolucionando o engajamento nos atendimentos odontológicos. Sua saúde bucal, gamificada.</p>
+    </div>
+  </div>
+  <div class="login-right">
+    <div class="login-box">
+      <div class="cc-logo-badge">Care<br>Contact</div>
+      <h2>Bem-vindo(a)!</h2>
+      <p>Entre com seu CPF e senha para acessar o portal.</p>
+
+      <div class="mb-3">
+        <label class="form-label" for="cpf">CPF</label>
+        <input type="text" id="cpf" class="form-control" placeholder="000.000.000-00" maxlength="14" />
+        <div class="form-error" id="cpfError">CPF inválido.</div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="senha">Senha</label>
+        <input type="password" id="senha" class="form-control" placeholder="Mínimo 6 caracteres" />
+        <div class="form-error" id="senhaError">Senha deve ter no mínimo 6 caracteres.</div>
+      </div>
+      <button class="btn-login" id="btnLogin">Entrar</button>
+      <div class="login-links">
+        <a href="#">Esqueci minha senha</a>
+        <a href="#">Cadastre-se</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Formatar CPF
+  document.getElementById('cpf').addEventListener('input', function () {
+    let v = this.value.replace(/\D/g, '').slice(0, 11);
+    if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+    else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+    else if (v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+    this.value = v;
+  });
+
+  document.getElementById('btnLogin').addEventListener('click', function () {
+    const cpf = document.getElementById('cpf').value;
+    const senha = document.getElementById('senha').value;
+    const cpfError = document.getElementById('cpfError');
+    const senhaError = document.getElementById('senhaError');
+    let valid = true;
+
+    const cpfClean = cpf.replace(/\D/g, '');
+    if (cpfClean.length !== 11) {
+      cpfError.classList.add('show'); valid = false;
+    } else { cpfError.classList.remove('show'); }
+
+    if (senha.length < 6) {
+      senhaError.classList.add('show'); valid = false;
+    } else { senhaError.classList.remove('show'); }
+
+    if (valid) {
+      localStorage.setItem('cc_user', JSON.stringify({ nome: 'Marcos', cpf }));
+      window.location.href = 'pages/dashboard.html';
+    }
+  });
+
+  // Enter key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('btnLogin').click();
+  });
+</script>
+</body>
+</html>
