@@ -55,30 +55,23 @@
 <body>
 <nav id="cc-navbar"></nav>
 
-<div class="d-grid" style="grid-template-columns:300px 1fr;min-height:calc(100vh - 65px);" id="layout">
+<div class="d-grid" style="grid-template-columns:300px 1fr;height:calc(100vh - 65px);" id="layout">
   <!-- SIDEBAR -->
   <div class="bg-white border-end p-4">
-    <div class="d-flex gap-2 mb-4 flex-wrap">
-      <button class="sidebar-tab active">Consultas</button>
-      <button class="sidebar-tab">Perfil</button>
+    <div class="mb-4">
+      <div style="width:44px;height:44px;background:var(--cc-primary);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:12px;">📅</div>
+      <h2 style="font-size:20px;font-weight:800;color:var(--cc-primary);margin:0 0 4px;">Novo Agendamento</h2>
+      <p style="font-size:13px;color:var(--cc-muted);margin:0;line-height:1.5;">Preencha os campos e selecione<br>um dia no calendário</p>
     </div>
-    <h2 class="fw-bold mb-4" style="font-size:18px;color:var(--cc-primary);">Agendar consulta</h2>
 
     <div class="mb-3">
       <label class="form-label">Especialidade</label>
-      <select class="form-select">
+      <select class="form-select" id="especialidadeSelect" onchange="atualizarMedicos()">
         <option>Ortodontia</option>
         <option>Odontologia</option>
         <option>Implantes</option>
         <option>Estética</option>
         <option>Profilaxia</option>
-      </select>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Doutor(a)</label>
-      <select class="form-select">
-        <option>Dra. Ana Santos</option>
-        <option>Dr. Pedro Lima</option>
       </select>
     </div>
     <div class="mb-3">
@@ -88,26 +81,24 @@
       </select>
     </div>
     <div class="mb-3">
+      <label class="form-label">Doutor(a)</label>
+      <select class="form-select" id="medicoSelect" onchange="atualizarHorarios()"></select>
+    </div>
+    <div class="mb-3">
       <label class="form-label">Data</label>
-      <select class="form-select" id="dataSelect">
-        <option>23 de outubro de 2025</option>
-        <option>24 de outubro de 2025</option>
-        <option>30 de outubro de 2025</option>
-      </select>
+      <div class="form-control d-flex align-items-center" id="dataDisplay" style="background:#f9fafb;color:var(--cc-muted);cursor:default;min-height:42px;">
+        📅 Selecione um dia no calendário
+      </div>
     </div>
     <div class="mb-3">
       <label class="form-label">Horário</label>
-      <select class="form-select">
-        <option>09:00 horas</option>
-        <option>10:00 horas</option>
-        <option>14:00 horas</option>
-      </select>
+      <select class="form-select" id="horarioSelect"></select>
     </div>
-    <button class="btn-confirmar-cal" onclick="window.location.href='confirmar-consulta.html'">Confirmar</button>
+    <button class="btn-confirmar-cal" onclick="confirmarAgendamento()">Confirmar</button>
   </div>
 
   <!-- MAIN -->
-  <div class="p-4 p-md-5">
+  <div class="p-4 p-md-5" style="display:flex;flex-direction:column;">
     <div class="cal-header">
       <h2 style="font-size:22px;font-weight:800;color:var(--cc-primary);margin:0;">Calendário</h2>
       <div class="cal-nav">
@@ -119,8 +110,7 @@
     </div>
 
     <div class="d-flex gap-3 mb-3 flex-wrap">
-      <div class="legend-item"><div class="legend-dot dot-disponivel"></div>Dias Disponíveis</div>
-      <div class="legend-item"><div class="legend-dot dot-indisponivel"></div>Dias Indisponíveis</div>
+      <div class="legend-item"><div class="legend-dot dot-selecionado"></div>Dia selecionado</div>
       <div class="legend-item"><div class="legend-dot dot-confirmada"></div>Consulta confirmada</div>
     </div>
 
@@ -139,6 +129,12 @@
   </div>
 </div>
 
+<!-- Barra sticky mobile: aparece quando data é selecionada -->
+<div id="mobile-sticky-bar" style="display:none;position:fixed;bottom:70px;left:0;right:0;padding:10px 16px;background:white;border-top:2px solid var(--cc-border);z-index:150;align-items:center;gap:12px;box-shadow:0 -4px 12px rgba(30,58,138,0.1);">
+  <div style="flex:1;font-size:13px;font-weight:600;color:var(--cc-primary);" id="mobileDateLabel">Selecione uma data</div>
+  <button onclick="confirmarAgendamento()" style="background:var(--cc-primary);color:white;border:none;border-radius:10px;padding:10px 20px;font-weight:800;font-size:13px;font-family:var(--cc-font);cursor:pointer;white-space:nowrap;">Confirmar →</button>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../js/navbar.js"></script>
 <script src="../js/toast.js"></script>
@@ -147,12 +143,72 @@
 
   let currentYear = 2025;
   let currentMonth = 9; // 0-indexed: 9 = outubro
+  let selectedDate = null;
 
   const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const mesesFull = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const diasSemana = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
 
-  // Dias disponíveis (dia do mês)
-  const disponiveis = [23, 24, 30];
+  // Dias com consulta já confirmada (não selecionáveis)
   const confirmadas = [22];
+
+  // Mapeamento especialidade → médicos disponíveis
+  const medicosPorEspecialidade = {
+    'Ortodontia':  ['Dra. Ana Santos', 'Dr. Carlos Mendes'],
+    'Odontologia': ['Dra. Ana Santos', 'Dr. Pedro Lima'],
+    'Implantes':   ['Dr. Ricardo Souza', 'Dr. Pedro Lima'],
+    'Estética':    ['Dra. Mariana Costa', 'Dra. Ana Santos'],
+    'Profilaxia':  ['Dr. Pedro Lima', 'Dra. Lucia Ferreira'],
+  };
+
+  // Mapeamento médico → horários disponíveis
+  const horariosPorMedico = {
+    'Dra. Ana Santos':     ['09:00', '10:00', '11:00', '14:00', '15:00'],
+    'Dr. Carlos Mendes':   ['08:00', '09:00', '10:00', '14:00'],
+    'Dr. Pedro Lima':      ['08:00', '11:00', '13:00', '14:00', '16:00', '17:00'],
+    'Dr. Ricardo Souza':   ['10:00', '11:00', '14:00', '15:00', '16:00'],
+    'Dra. Mariana Costa':  ['09:00', '10:00', '14:00', '15:00', '17:00'],
+    'Dra. Lucia Ferreira': ['08:00', '09:00', '13:00', '14:00'],
+  };
+
+  function atualizarMedicos() {
+    const especialidade = document.getElementById('especialidadeSelect').value;
+    const medicoSelect = document.getElementById('medicoSelect');
+    const medicos = medicosPorEspecialidade[especialidade] || [];
+    medicoSelect.innerHTML = medicos.map(m => `<option>${m}</option>`).join('');
+    atualizarHorarios();
+  }
+
+  function atualizarHorarios() {
+    const medico = document.getElementById('medicoSelect').value;
+    const horarioSelect = document.getElementById('horarioSelect');
+    const horarios = horariosPorMedico[medico] || ['09:00', '14:00'];
+    horarioSelect.innerHTML = horarios.map(h => `<option>${h} horas</option>`).join('');
+  }
+
+  function updateDataDisplay(day, month, year) {
+    const date = new Date(year, month, day);
+    const diaSemana = diasSemana[date.getDay()];
+    const el = document.getElementById('dataDisplay');
+    el.style.color = 'var(--cc-text)';
+    el.style.fontWeight = '600';
+    el.textContent = `${diaSemana}, ${day} de ${mesesFull[month]} de ${year}`;
+
+    // Barra sticky mobile
+    const bar = document.getElementById('mobile-sticky-bar');
+    if (bar) {
+      bar.style.display = 'flex';
+      document.getElementById('mobileDateLabel').textContent = `📅 ${diaSemana.split('-')[0]}, ${day}/${String(month+1).padStart(2,'0')}`;
+    }
+  }
+
+  function confirmarAgendamento() {
+    if (!selectedDate) {
+      showToast('Selecione um dia no calendário!', 'warning');
+      return;
+    }
+    window.location.href = 'confirmar-consulta.html';
+  }
 
   function renderCal() {
     const mesAnoEl = document.getElementById('mesAno');
@@ -174,19 +230,26 @@
       container.appendChild(d);
     }
 
-    // Dias do mês atual
+    // Dias do mês atual — todos selecionáveis, exceto dias com consulta confirmada
     for (let d = 1; d <= daysInMonth; d++) {
       const el = document.createElement('div');
-      let cls = 'cal-dia';
-      if (confirmadas.includes(d)) cls += ' confirmada';
-      else if (disponiveis.includes(d)) cls += ' disponivel';
-      else cls += ' indisponivel';
-      el.className = cls;
+      const isConfirmada = confirmadas.includes(d) && currentMonth === 9 && currentYear === 2025;
+      el.className = 'cal-dia' + (isConfirmada ? ' confirmada' : '');
       el.textContent = d;
-      el.addEventListener('click', () => {
-        container.querySelectorAll('.cal-dia').forEach(x => x.classList.remove('selecionado'));
-        if (disponiveis.includes(d)) { el.classList.add('selecionado'); }
-      });
+
+      // Restaurar seleção visual ao navegar meses
+      if (selectedDate && selectedDate.day === d && selectedDate.month === currentMonth && selectedDate.year === currentYear) {
+        el.classList.add('selecionado');
+      }
+
+      if (!isConfirmada) {
+        el.addEventListener('click', () => {
+          container.querySelectorAll('.cal-dia').forEach(x => x.classList.remove('selecionado'));
+          el.classList.add('selecionado');
+          selectedDate = { day: d, month: currentMonth, year: currentYear };
+          updateDataDisplay(d, currentMonth, currentYear);
+        });
+      }
       container.appendChild(el);
     }
 
@@ -212,6 +275,7 @@
     renderCal();
   });
 
+  atualizarMedicos();
   renderCal();
 
   function checkLayout() {

@@ -27,7 +27,7 @@
     }
 
     .login-left {
-      background: linear-gradient(145deg, #1E3A8A 0%, #2563EB 100%);
+      background: url('assets/bg-login.png') center/cover no-repeat;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -40,21 +40,10 @@
     .login-left::before {
       content: '';
       position: absolute;
-      width: 400px; height: 400px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 50%;
-      top: -100px; right: -100px;
-    }
-    .login-left::after {
-      content: '';
-      position: absolute;
-      width: 300px; height: 300px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 50%;
-      bottom: -80px; left: -80px;
+      inset: 0;
+      background: rgba(14, 30, 80, 0.45);
     }
     .login-left-content { position: relative; z-index: 1; text-align: center; }
-    .login-tooth { font-size: 72px; margin-bottom: 24px; display: block; }
     .login-brand { font-size: 36px; font-weight: 800; margin-bottom: 16px; }
     .login-tagline { font-size: 15px; opacity: 0.85; line-height: 1.7; max-width: 320px; margin: 0 auto; }
 
@@ -130,7 +119,6 @@
 <div class="login-wrap">
   <div class="login-left">
     <div class="login-left-content">
-      <span class="login-tooth">🦷</span>
       <div class="login-brand">Care Contact</div>
       <p class="login-tagline">Revolucionando o engajamento nos atendimentos odontológicos. Sua saúde bucal, gamificada.</p>
     </div>

@@ -46,16 +46,18 @@
 <nav id="cc-navbar"></nav>
 
 <div class="d-grid" style="grid-template-columns:300px 1fr;min-height:calc(100vh - 65px);" id="layout">
-  <div class="bg-white border-end p-4" id="sidebar">
+  <div class="bg-white border-end p-3 p-md-4" id="sidebar">
     <div class="d-flex gap-2 mb-3 flex-wrap">
       <button class="sidebar-tab" onclick="window.location.href='dashboard.html'">Home</button>
-      <button class="sidebar-tab" onclick="window.location.href='dashboard.html'">Consultas</button>
+      <button class="sidebar-tab" onclick="window.location.href='dashboard.html?tab=consultas'">Consultas</button>
       <button class="sidebar-tab active" onclick="window.location.href='perfil.html'">Perfil</button>
     </div>
-    <div class="notif-title">Notificações</div>
-    <div id="notifCard" class="notif-card">
-      <div style="font-size:28px;margin-bottom:8px;">⏳</div>
-      Carregando notificações...
+    <div class="notif-title">
+      <span>Notificações</span>
+      <span class="notif-badge" id="notifBadge" style="display:none;">1</span>
+    </div>
+    <div id="notifCard">
+      <div class="notif-skeleton"></div>
     </div>
     <span class="ai-badge">🧠 Powered by AI — em breve</span>
   </div>
@@ -132,8 +134,14 @@
 
   setTimeout(() => {
     document.getElementById('notifCard').innerHTML = `
-      <div style="font-size:20px;margin-bottom:8px;">✅</div>
-      Perfil carregado com sucesso!
+      <div class="notif-item">
+        <div class="notif-icon-wrap notif-icon-success">✅</div>
+        <div class="notif-content">
+          <div class="notif-item-title">Perfil em dia</div>
+          <div class="notif-item-desc">Suas informações estão atualizadas</div>
+          <div class="notif-item-time">Hoje</div>
+        </div>
+      </div>
     `;
   }, 800);
 

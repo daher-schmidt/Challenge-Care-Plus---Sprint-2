@@ -262,18 +262,69 @@ a { text-decoration: none; color: inherit; }
 .consulta-medico { font-weight: 700; color: var(--cc-primary); font-size: 16px; }
 .consulta-data   { color: var(--cc-muted); font-size: 13px; }
 
-/* NOTIF CARD */
-.notif-card {
-  background: var(--cc-bg);
-  border-radius: var(--cc-radius);
-  padding: 16px;
-  margin-top: 12px;
-  font-size: 14px;
-  color: var(--cc-text);
-  border: 1px solid var(--cc-border);
-  line-height: 1.6;
+/* NOTIF */
+.notif-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--cc-muted);
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
-.notif-title { font-weight: 700; font-size: 13px; color: var(--cc-muted); margin-top: 20px; }
+.notif-badge {
+  background: var(--cc-danger);
+  color: white;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.notif-skeleton {
+  height: 68px;
+  background: linear-gradient(90deg, #f0f4f8 25%, #e8edf3 50%, #f0f4f8 75%);
+  background-size: 200% 100%;
+  border-radius: var(--cc-radius);
+  animation: notif-shimmer 1.4s infinite;
+}
+@keyframes notif-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.notif-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px;
+  background: var(--cc-card);
+  border-radius: var(--cc-radius);
+  border: 1px solid var(--cc-border);
+  margin-bottom: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.notif-item:hover { border-color: var(--cc-accent); box-shadow: var(--cc-shadow); }
+.notif-icon-wrap {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+.notif-icon-warning { background: #FEF3C7; }
+.notif-icon-success { background: #D1FAE5; }
+.notif-icon-info    { background: #DBEAFE; }
+.notif-content { flex: 1; min-width: 0; }
+.notif-item-title { font-size: 13px; font-weight: 700; color: var(--cc-text); }
+.notif-item-desc  { font-size: 12px; color: var(--cc-muted); margin-top: 2px; }
+.notif-item-time  { font-size: 11px; color: #94A3B8; margin-top: 4px; font-weight: 600; }
 
 /* SIDEBAR TABS */
 .sidebar-tab {
@@ -293,12 +344,64 @@ a { text-decoration: none; color: inherit; }
   color: white;
 }
 
+/* HISTÓRICO DE CONSULTAS */
+.hist-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--cc-border);
+  transition: background 0.15s;
+}
+.hist-item:last-child { border-bottom: none; }
+.hist-item:hover { background: #FAFBFF; }
+.hist-icon-wrap {
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.hist-agendado   { background: #DBEAFE; }
+.hist-concluido  { background: #D1FAE5; }
+.hist-confirmado { background: #D1FAE5; }
+.hist-cancelado  { background: #FEE2E2; }
+.hist-reagendado { background: #FEF3C7; }
+.hist-info { flex: 1; min-width: 0; }
+.hist-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.hist-especialidade { font-size: 15px; font-weight: 800; color: var(--cc-primary); }
+.hist-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+.hist-badge.hist-agendado   { background: #DBEAFE; color: #1D4ED8; }
+.hist-badge.hist-concluido  { background: #D1FAE5; color: #065F46; }
+.hist-badge.hist-confirmado { background: #D1FAE5; color: #065F46; }
+.hist-badge.hist-cancelado  { background: #FEE2E2; color: #991B1B; }
+.hist-badge.hist-reagendado { background: #FEF3C7; color: #92400E; }
+.hist-medico { font-size: 13px; font-weight: 600; color: var(--cc-text); }
+.hist-data   { font-size: 12px; color: var(--cc-muted); margin-top: 2px; }
+.hist-local  { font-size: 12px; color: var(--cc-muted); margin-top: 2px; }
+
 /* CALENDAR */
 .cal-grid {
   background: var(--cc-card);
   border-radius: var(--cc-radius-lg);
   overflow: hidden;
   box-shadow: var(--cc-shadow);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 .cal-dias-semana {
   display: grid;
@@ -307,7 +410,7 @@ a { text-decoration: none; color: inherit; }
   border-bottom: 2px solid var(--cc-border);
 }
 .cal-dia-nome {
-  padding: 12px 0;
+  padding: 14px 0;
   text-align: center;
   font-size: 12px;
   font-weight: 800;
@@ -317,21 +420,23 @@ a { text-decoration: none; color: inherit; }
 .cal-dias {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 1fr;
   gap: 2px;
   padding: 8px;
+  flex: 1;
 }
 .cal-dia {
-  padding: 10px 0;
-  text-align: center;
-  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  font-size: 15px;
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.15s;
 }
 .cal-dia:hover { background: #EFF6FF; }
-.cal-dia.disponivel { color: var(--cc-accent); font-weight: 700; }
-.cal-dia.indisponivel { color: #CBD5E1; cursor: default; }
 .cal-dia.confirmada {
   background: var(--cc-primary);
   color: white;
@@ -342,10 +447,128 @@ a { text-decoration: none; color: inherit; }
 
 .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--cc-muted); font-weight: 600; }
 .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
-.dot-disponivel   { background: var(--cc-accent); }
-.dot-indisponivel { background: #CBD5E1; }
+.dot-selecionado  { background: var(--cc-accent); }
 .dot-confirmada   { background: var(--cc-primary); }
 
+/* ═══════════════════════════════════════
+   BOTTOM NAV (mobile only)
+═══════════════════════════════════════ */
+#cc-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: white;
+  border-top: 2px solid var(--cc-border);
+  z-index: 200;
+  padding: 6px 0 env(safe-area-inset-bottom, 6px);
+  justify-content: space-around;
+  box-shadow: 0 -4px 16px rgba(30,58,138,0.08);
+}
+#cc-bottom-nav a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--cc-muted);
+  font-size: 10px;
+  font-weight: 700;
+  text-decoration: none;
+  flex: 1;
+  padding: 4px 2px;
+  transition: color .15s;
+}
+#cc-bottom-nav a span:first-child { font-size: 20px; line-height: 1.2; }
+#cc-bottom-nav a.active { color: var(--cc-primary); }
+#cc-bottom-nav a:hover  { color: var(--cc-accent);  }
+
+/* ═══════════════════════════════════════
+   RESPONSIVO — até 768px
+═══════════════════════════════════════ */
 @media (max-width: 768px) {
-  #cc-navbar { padding: 12px 16px; }
+
+  /* Espaço para bottom nav */
+  body { padding-bottom: 70px; }
+
+  /* Bottom nav visível */
+  #cc-bottom-nav { display: flex; }
+
+  /* === NAVBAR === */
+  #cc-navbar { padding: 10px 16px; gap: 6px; }
+
+  /* === SIDEBAR COMPACTA (dashboard / perfil) === */
+  #sidebar { border-bottom: 1px solid var(--cc-border); }
+  .sidebar-tab { padding: 6px 12px; font-size: 12px; }
+  .ai-badge { display: none; }
+
+  /* Notificações: compactas e com altura limitada */
+  .notif-title { margin-top: 10px; }
+  .notif-item  { padding: 10px 12px; gap: 8px; }
+  .notif-icon-wrap  { width: 30px; height: 30px; font-size: 14px; border-radius: 8px; }
+  .notif-item-title { font-size: 12px; }
+  .notif-item-desc  { font-size: 11px; }
+  .notif-item-time  { font-size: 10px; }
+  .notif-badge      { width: 16px; height: 16px; font-size: 9px; }
+
+  /* === CALENDÁRIO === */
+  .cal-dia      { padding: 10px 2px; font-size: 12px; border-radius: 6px; }
+  .cal-dia-nome { padding: 10px 0;   font-size: 10px; }
+  .cal-dias     { gap: 1px; padding: 4px; }
+  .legend-item  { font-size: 11px; }
+  .legend-dot   { width: 8px; height: 8px; }
+
+  /* === CARDS DE CONSULTA (dashboard) === */
+  .consulta-card { flex-direction: column; gap: 10px; }
+  .consulta-card > a,
+  .consulta-card > a .btn-cc { width: 100%; display: block; text-align: center; }
+
+  /* === CARDS DE RESULTADO === */
+  .result-card { padding: 18px 16px; border-radius: 14px; }
+  .result-header { margin-bottom: 14px; gap: 10px; }
+  .result-header h3 { font-size: 15px; }
+  .result-icon  { width: 36px; height: 36px; font-size: 17px; }
+  .result-row   { font-size: 13px; padding: 10px 0; gap: 8px; }
+
+  /* Reordenamento: card de resultado ANTES do texto em mobile */
+  /* Converte grid em flex column para suportar order */
+  #layout { display: flex !important; flex-direction: column !important; }
+  .result-text-col { order: 2; border-right: none !important; border-top: 1px solid var(--cc-border); }
+  .result-card-col { order: 1; }
+
+  /* === SMILE POINTS === */
+  .smile-pts-big  { font-size: 22px; }
+  .smile-bar-labels { font-size: 10px; }
+  .smile-box      { padding: 12px; }
+
+  /* Reordenamento smile-points: main antes das conquistas */
+  .sp-main  { order: 1; }
+  .sp-aside { order: 2; border-right: none !important; border-top: 1px solid var(--cc-border); }
+
+  /* === HISTÓRICO === */
+  .hist-item    { padding: 12px 14px; gap: 10px; }
+  .hist-icon-wrap { width: 36px; height: 36px; font-size: 16px; border-radius: 10px; }
+  .hist-especialidade { font-size: 14px; }
+  .hist-badge   { font-size: 10px; padding: 2px 8px; }
+  .hist-top     { flex-wrap: wrap; gap: 4px; }
+  .hist-medico  { font-size: 12px; }
+  .hist-data, .hist-local { font-size: 11px; }
+
+  /* === TABELA === */
+  .tabela-row, .tabela-header { padding: 12px 14px; }
+  .tabela-acao { font-size: 12px; }
+  .tabela-pts  { font-size: 12px; font-weight: 800; }
+
+  /* === CONQUISTAS === */
+  .conquista-nome  { font-size: 12px; }
+  .conquista-pts   { font-size: 11px; }
+  .conquista-emoji { width: 36px; height: 36px; font-size: 16px; }
+
+  /* === BARRA CARD (smile-points) === */
+  .barra-card  { padding: 14px; gap: 10px; }
+  .barra-emoji { font-size: 30px; }
+
+  /* === MINI-CAL (reagendar) === */
+  .mini-dia { padding: 6px 2px; font-size: 11px; }
+
+  /* === STICKY CONFIRM BAR (calendário + reagendar) === */
+  #mobile-sticky-bar { display: flex !important; }
 }
