@@ -43,7 +43,7 @@ O no-show em clínicas médicas gera desperdício de recursos e prejudica outros
 ---
 
 ## 📁 Estrutura do Projeto
-
+```
 care-contact/
 ├── index.html               # Login
 ├── css/
@@ -61,7 +61,7 @@ care-contact/
 ├── confirmar-consulta.html
 ├── reagendar-consulta.html
 └── cancelar-consulta.html
-
+```
 ---
 
 ## ▶️ Como Executar
@@ -86,6 +86,8 @@ git clone https://github.com/daher-schmidt/Challenge-Care-Plus---Sprint-2.git
 | Nome | RM |
 |------|----|
 | Daher Schmidt De Oliveira | RM 567351 |
+| Guilherme De Araújo Gonçalves | RM 567042 |
+
 
 ---
 
