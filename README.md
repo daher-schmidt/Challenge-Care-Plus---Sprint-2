@@ -87,6 +87,9 @@ git clone https://github.com/daher-schmidt/Challenge-Care-Plus---Sprint-2.git
 |------|----|
 | Daher Schmidt De Oliveira | RM 567351 |
 | Guilherme De Araújo Gonçalves | RM 567042 |
+| Lucca de Oliveira Modena | RM 567257 |
+| João Lucas de Souza Coelho Marques  | RM 567706 |
+
 
 
 ---
