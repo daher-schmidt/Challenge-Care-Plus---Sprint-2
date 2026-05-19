@@ -6,74 +6,89 @@
   <title>Care Contact — Meus Agendamentos</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="../css/shared.css" rel="stylesheet" />
+  <style>html, body { overflow: hidden; height: 100%; }</style>
 </head>
 <body>
 <nav id="cc-navbar"></nav>
 
-<div class="d-grid" style="grid-template-columns:300px 1fr;min-height:calc(100vh - 65px);" id="layout">
+<div class="d-grid" style="grid-template-columns:300px 1fr;height:calc(100vh - 65px);overflow:hidden;" id="layout">
   <!-- SIDEBAR -->
-  <div class="bg-white border-end p-4" id="sidebar">
+  <div class="bg-white border-end p-3 p-md-4" id="sidebar">
     <div class="d-flex gap-2 mb-3 flex-wrap">
-      <button class="sidebar-tab" onclick="window.location.href='dashboard.html'">Home</button>
-      <button class="sidebar-tab active" onclick="window.location.href='dashboard.html'">Consultas</button>
-      <button class="sidebar-tab" onclick="window.location.href='perfil.html'">Perfil</button>
+      <button class="sidebar-tab active" id="tab-home" onclick="switchTab('home')">Home</button>
+      <button class="sidebar-tab" id="tab-consultas" onclick="switchTab('consultas')">Consultas</button>
+      <button class="sidebar-tab" id="tab-perfil" onclick="window.location.href='perfil.html'">Perfil</button>
     </div>
-    <div class="notif-title">Notificações</div>
-    <div id="notifCard" class="notif-card">
-      <div style="font-size:28px;margin-bottom:8px;">⏳</div>
-      Carregando notificações...
+    <div class="notif-title">
+      <span>Notificações</span>
+      <span class="notif-badge" id="notifBadge" style="display:none;">1</span>
+    </div>
+    <div id="notifCard">
+      <div class="notif-skeleton"></div>
     </div>
     <span class="ai-badge">🧠 Powered by AI — em breve</span>
   </div>
 
   <!-- MAIN -->
   <div class="p-4 p-md-5">
-    <div id="welcomeTitle" class="fw-bold mb-1" style="font-size:24px;color:var(--cc-primary);">Bem-vindo(a)!</div>
-    <div class="mb-3" style="color:var(--cc-muted);font-size:14px;">Confirme, reagende ou cancele sua próxima consulta:</div>
 
-    <div class="d-inline-flex align-items-center gap-2 mb-3 px-3 py-2 bg-white rounded-pill shadow-sm" style="font-size:13px;font-weight:700;color:var(--cc-primary);">
-      📅 22/10/2025 ▾
+    <!-- VIEW: HOME -->
+    <div id="view-home">
+      <div id="welcomeTitle" class="fw-bold mb-1" style="font-size:24px;color:var(--cc-primary);">Bem-vindo(a)!</div>
+      <div class="mb-3" style="color:var(--cc-muted);font-size:14px;">Confirme, reagende ou cancele sua próxima consulta:</div>
+
+      <div class="d-inline-flex align-items-center gap-2 mb-3 px-3 py-2 bg-white rounded-pill shadow-sm" style="font-size:13px;font-weight:700;color:var(--cc-primary);">
+        📅 22/10/2025 ▾
+      </div>
+
+      <div class="alert d-flex align-items-center gap-2 mb-4" style="background:#FEF3C7;border:none;border-left:4px solid var(--cc-warning);border-radius:12px;font-size:13px;font-weight:600;">
+        🔔 Importante: Confirmações, reagendamentos e cancelamentos devem ser feitos com até 24h de antecedência.
+      </div>
+
+      <div class="cc-card">
+        <div class="consulta-card">
+          <div class="d-flex align-items-center gap-3">
+            <div class="consulta-icon icon-confirmar">✅</div>
+            <div>
+              <div class="consulta-label label-confirmar">CONFIRMAR</div>
+              <div class="consulta-medico">Dra. Ana Santos</div>
+              <div class="consulta-data">Quarta, 22/10 — 14:00</div>
+            </div>
+          </div>
+          <a href="confirmar-consulta.html"><button class="btn-cc btn-confirmar">CONFIRMAR</button></a>
+        </div>
+        <div class="consulta-card">
+          <div class="d-flex align-items-center gap-3">
+            <div class="consulta-icon icon-reagendar">⚠️</div>
+            <div>
+              <div class="consulta-label label-reagendar">REAGENDAR</div>
+              <div class="consulta-medico">Dra. Ana Santos</div>
+              <div class="consulta-data">Quarta, 22/10 — 14:00</div>
+            </div>
+          </div>
+          <a href="reagendar-consulta.html"><button class="btn-cc btn-reagendar">REAGENDAR</button></a>
+        </div>
+        <div class="consulta-card">
+          <div class="d-flex align-items-center gap-3">
+            <div class="consulta-icon icon-cancelar">⛔</div>
+            <div>
+              <div class="consulta-label label-cancelar">CANCELAR</div>
+              <div class="consulta-medico">Dra. Ana Santos</div>
+              <div class="consulta-data">Quarta, 22/10 — 14:00</div>
+            </div>
+          </div>
+          <a href="cancelar-consulta.html"><button class="btn-cc btn-cancelar">CANCELAR</button></a>
+        </div>
+      </div>
     </div>
 
-    <div class="alert d-flex align-items-center gap-2 mb-4" style="background:#FEF3C7;border:none;border-left:4px solid var(--cc-warning);border-radius:12px;font-size:13px;font-weight:600;">
-      🔔 Importante: Confirmações, reagendamentos e cancelamentos devem ser feitos com até 24h de antecedência.
+    <!-- VIEW: CONSULTAS (histórico) -->
+    <div id="view-consultas" style="display:none;">
+      <div class="fw-bold mb-1" style="font-size:24px;color:var(--cc-primary);">Minhas Consultas</div>
+      <div class="mb-4" style="color:var(--cc-muted);font-size:14px;">Histórico completo de agendamentos</div>
+      <div class="cc-card" id="listaConsultas"></div>
     </div>
 
-    <div class="cc-card">
-      <div class="consulta-card">
-        <div class="d-flex align-items-center gap-3">
-          <div class="consulta-icon icon-confirmar">✅</div>
-          <div>
-            <div class="consulta-label label-confirmar">CONFIRMAR</div>
-            <div class="consulta-medico">Dra. Ana Santos</div>
-            <div class="consulta-data">Quarta, 22/10 — 14:00</div>
-          </div>
-        </div>
-        <a href="confirmar-consulta.html"><button class="btn-cc btn-confirmar">CONFIRMAR</button></a>
-      </div>
-      <div class="consulta-card">
-        <div class="d-flex align-items-center gap-3">
-          <div class="consulta-icon icon-reagendar">⚠️</div>
-          <div>
-            <div class="consulta-label label-reagendar">REAGENDAR</div>
-            <div class="consulta-medico">Dra. Ana Santos</div>
-            <div class="consulta-data">Quarta, 22/10 — 14:00</div>
-          </div>
-        </div>
-        <a href="reagendar-consulta.html"><button class="btn-cc btn-reagendar">REAGENDAR</button></a>
-      </div>
-      <div class="consulta-card">
-        <div class="d-flex align-items-center gap-3">
-          <div class="consulta-icon icon-cancelar">⛔</div>
-          <div>
-            <div class="consulta-label label-cancelar">CANCELAR</div>
-            <div class="consulta-medico">Dra. Ana Santos</div>
-            <div class="consulta-data">Quarta, 22/10 — 14:00</div>
-          </div>
-        </div>
-        <a href="cancelar-consulta.html"><button class="btn-cc btn-cancelar">CANCELAR</button></a>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -86,10 +101,74 @@
   const user = JSON.parse(localStorage.getItem('cc_user') || '{"nome":"Marcos"}');
   document.getElementById('welcomeTitle').textContent = `Bem-vindo(a), ${user.nome}!`;
 
+  // Dados mock de agendamentos (substituir por fetch quando tiver backend)
+  const agendamentos = [
+    { id:'AGD001', medico:'Dra. Ana Santos', especialidade:'Odontologia', local:'Clínica Care Contact', data:'2025-10-22T14:00', status:'AGENDADO' },
+    { id:'AGD002', medico:'Dra. Ana Santos', especialidade:'Ortodontia',  local:'Clínica Care Contact', data:'2025-10-08T09:00', status:'CONCLUIDO' },
+    { id:'AGD003', medico:'Dra. Ana Santos', especialidade:'Implantes',   local:'Clínica Care Contact', data:'2025-09-15T10:00', status:'CONFIRMADO' },
+    { id:'AGD004', medico:'Dra. Ana Santos', especialidade:'Estética',    local:'Clínica Care Contact', data:'2025-08-20T14:00', status:'CANCELADO' },
+    { id:'AGD005', medico:'Dra. Ana Santos', especialidade:'Profilaxia',  local:'Clínica Care Contact', data:'2025-11-05T09:00', status:'REAGENDADO' },
+  ];
+
+  const statusConfig = {
+    AGENDADO:   { label:'Agendado',   cls:'hist-agendado',   icon:'🗓️' },
+    CONCLUIDO:  { label:'Concluído',  cls:'hist-concluido',  icon:'✅' },
+    CONFIRMADO: { label:'Confirmado', cls:'hist-confirmado', icon:'✔️' },
+    CANCELADO:  { label:'Cancelado',  cls:'hist-cancelado',  icon:'❌' },
+    REAGENDADO: { label:'Reagendado', cls:'hist-reagendado', icon:'🔄' },
+  };
+
+  function formatarData(iso) {
+    const d = new Date(iso);
+    const dias = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+    const meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+    return `${dias[d.getDay()]}, ${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()} — ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}h`;
+  }
+
+  function renderConsultas() {
+    const lista = document.getElementById('listaConsultas');
+    lista.innerHTML = agendamentos.map(ag => {
+      const s = statusConfig[ag.status] || statusConfig.AGENDADO;
+      return `
+        <div class="hist-item">
+          <div class="hist-icon-wrap ${s.cls}">${s.icon}</div>
+          <div class="hist-info">
+            <div class="hist-top">
+              <span class="hist-especialidade">${ag.especialidade}</span>
+              <span class="hist-badge ${s.cls}">${s.label}</span>
+            </div>
+            <div class="hist-medico">${ag.medico}</div>
+            <div class="hist-data">${formatarData(ag.data)}</div>
+            <div class="hist-local">📍 ${ag.local}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll('.sidebar-tab[id^="tab-"]').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.getElementById('view-home').style.display      = tab === 'home'      ? '' : 'none';
+    document.getElementById('view-consultas').style.display = tab === 'consultas' ? '' : 'none';
+    if (tab === 'consultas') renderConsultas();
+  }
+
+  // Suporte a navegação cross-page: dashboard.html?tab=consultas
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('tab') === 'consultas') switchTab('consultas');
+
   setTimeout(() => {
+    document.getElementById('notifBadge').style.display = 'flex';
     document.getElementById('notifCard').innerHTML = `
-      <div style="font-size:20px;margin-bottom:8px;">🔔</div>
-      <strong>Lembrete:</strong> Sua consulta com a <strong>Dra. Ana Santos</strong> é amanhã às 14:00. Não esqueça de confirmar!
+      <div class="notif-item">
+        <div class="notif-icon-wrap notif-icon-warning">🗓️</div>
+        <div class="notif-content">
+          <div class="notif-item-title">Consulta amanhã</div>
+          <div class="notif-item-desc">Dra. Ana Santos — 14:00h</div>
+          <div class="notif-item-time">Não esqueça de confirmar!</div>
+        </div>
+      </div>
     `;
   }, 800);
 

@@ -8,70 +8,212 @@
   <link href="../css/shared.css" rel="stylesheet" />
   <style>
     .mini-cal { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 16px; margin-top: 20px; }
-    .mini-cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; font-weight:700; color:white; }
-    .mini-cal-header button { background:rgba(255,255,255,0.2); border:none; color:white; width:24px; height:24px; border-radius:4px; cursor:pointer; }
+    .mini-cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; font-weight:700; color:white; font-size:13px; }
+    .mini-cal-header button {
+      background: rgba(255,255,255,0.2); border: none; color: white;
+      width: 26px; height: 26px; border-radius: 6px; cursor: pointer;
+      font-size: 15px; font-weight: 700; transition: background .15s;
+    }
+    .mini-cal-header button:hover { background: rgba(255,255,255,0.4); }
     .mini-cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; text-align:center; font-size:11px; color:white; }
-    .mini-dia { padding:4px; border-radius:4px; cursor:pointer; font-weight:600; }
-    .mini-dia:hover { background:rgba(255,255,255,0.2); }
-    .mini-dia.selecionado { background:white; color:#f97316; font-weight:800; }
-    .data-confirmada { background:rgba(255,255,255,0.15); border-radius:10px; padding:16px; margin-top:16px; color:white; font-size:14px; }
+    .mini-dia-nome { padding: 4px 0; font-weight: 800; opacity: .7; font-size: 10px; }
+    .mini-dia {
+      padding: 5px 2px; border-radius: 5px; cursor: pointer;
+      font-weight: 600; transition: background .12s;
+    }
+    .mini-dia:hover { background: rgba(255,255,255,0.25); }
+    .mini-dia.outro-mes { opacity: .3; cursor: default; }
+    .mini-dia.outro-mes:hover { background: none; }
+    .mini-dia.consulta-atual { background: rgba(0,0,0,0.2); cursor: default; font-weight: 800; }
+    .mini-dia.consulta-atual:hover { background: rgba(0,0,0,0.2); }
+    .mini-dia.selecionado { background: white; color: #D97706; font-weight: 800; }
+
+    /* Select de horário dentro do card laranja */
+    .select-horario {
+      width: 100%;
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.4);
+      border-radius: 10px;
+      color: white;
+      padding: 10px 14px;
+      font-family: var(--cc-font);
+      font-weight: 700;
+      font-size: 13px;
+      margin-top: 14px;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='white' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 12px;
+    }
+    .select-horario option { background: #D97706; color: white; }
+    .select-horario:focus { outline: none; border-color: rgba(255,255,255,0.8); }
+
+    /* Data display / confirmada */
+    .data-confirmada {
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-top: 14px;
+      color: white;
+      font-size: 13px;
+    }
+    .data-confirmada .dc-row { display:flex; gap:28px; }
+    .data-confirmada strong { font-size: 11px; font-weight: 800; opacity: .8; display:block; margin-bottom:2px; }
+    .data-placeholder { opacity: .7; font-style: italic; font-size: 13px; }
+
+    /* Botão confirmar dentro do card */
+    .btn-confirmar-mini {
+      width: 100%;
+      background: rgba(255,255,255,0.25);
+      border: 2px solid rgba(255,255,255,0.7);
+      border-radius: 10px;
+      color: white;
+      padding: 12px;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 12px;
+      font-family: var(--cc-font);
+      transition: background .2s;
+      letter-spacing: .02em;
+    }
+    .btn-confirmar-mini:hover { background: rgba(255,255,255,0.4); }
+
+    /* Badge confirmada */
+    .badge-confirmada {
+      margin-top: 12px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 14px;
+      color: white;
+    }
+
+    /* Consulta atual (lado esquerdo) */
+    .consulta-info-box {
+      background: #F0F5FF;
+      border-left: 4px solid var(--cc-accent);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: var(--cc-text);
+      line-height: 1.7;
+    }
+    .consulta-info-box .ci-label {
+      font-size: 11px; font-weight: 800; color: var(--cc-accent);
+      text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px;
+    }
   </style>
 </head>
 <body>
 <nav id="cc-navbar"></nav>
 
 <div class="d-grid" style="grid-template-columns:1fr 1fr;min-height:calc(100vh - 65px);" id="layout">
-  <!-- SIDEBAR -->
-  <div class="p-4 p-md-5 bg-white border-end">
+
+  <!-- ── ESQUERDA ── -->
+  <div class="result-text-col p-4 p-md-5 bg-white border-end">
     <a href="dashboard.html" class="d-inline-block mb-4 fw-bold" style="font-size:14px;color:var(--cc-primary);">← Voltar</a>
-    <h2 class="fw-bold mb-4" style="font-size:26px;color:var(--cc-primary);">Nova chance de cuidar do seu sorriso! 😊</h2>
-    <p style="font-size:14px;color:#555;line-height:1.8;margin-bottom:14px;"><span id="nomeUser">Marcos</span>, sua consulta foi reagendada com sucesso para o dia 30/10 às 9h! 🎉</p>
-    <p style="font-size:14px;color:#555;line-height:1.8;margin-bottom:14px;">E tem mais: você acaba de ganhar <strong>150 Smile-Points</strong> por reagendar com 24 horas de antecedência! 🎊</p>
-    <p style="font-size:14px;color:#555;line-height:1.8;margin-bottom:14px;">Sabemos que imprevistos acontecem, e o importante é continuar cuidando da sua saúde bucal. 😁</p>
-    <p style="font-size:14px;color:#555;line-height:1.8;">Seu sorriso é importante pra você — e pra nós também. 💙</p>
+
+    <!-- Texto PRÉ-confirmação -->
+    <div id="texto-pre">
+      <h2 class="fw-bold mb-3" style="font-size:24px;color:var(--cc-primary);">Reagende sua consulta 📅</h2>
+      <div class="consulta-info-box">
+        <div class="ci-label">Consulta atual</div>
+        <strong>Dra. Ana Santos</strong> — Odontologia<br>
+        📅 Quarta-feira, 22 de outubro de 2025<br>
+        🕐 14:00h &nbsp;|&nbsp; 📍 Clínica Care Contact
+      </div>
+      <p style="font-size:14px;color:#555;line-height:1.8;margin-bottom:12px;">
+        Selecione uma nova data no calendário ao lado e escolha o novo horário.
+      </p>
+      <p style="font-size:14px;color:#555;line-height:1.8;margin-bottom:12px;">
+        Sabemos que imprevistos acontecem — o que importa é continuar cuidando do seu sorriso. 😁
+      </p>
+      <p style="font-size:14px;color:#555;line-height:1.8;">
+        Reagendar com antecedência também vale <strong>+150 Smile-Points</strong>! 🎊
+      </p>
+    </div>
+
+    <!-- Texto PÓS-confirmação -->
+    <div id="texto-pos" style="display:none;">
+      <h2 class="fw-bold mb-4" style="font-size:26px;color:var(--cc-primary);">Nova chance de cuidar do seu sorriso! 😊</h2>
+      <p style="font-size:14px;color:#555;line-height:1.8;margin-bottom:14px;">
+        <span id="nomeUser">Marcos</span>, sua consulta foi reagendada com sucesso para <strong id="novaDataTexto">—</strong>! 🎉
+      </p>
+      <p style="font-size:14px;color:#555;line-height:1.8;margin-bottom:14px;">
+        E tem mais: você acaba de ganhar <strong>150 Smile-Points</strong> por reagendar com antecedência! 🎊
+      </p>
+      <p style="font-size:14px;color:#555;line-height:1.8;margin-bottom:14px;">
+        Sabemos que imprevistos acontecem, e o importante é continuar cuidando da sua saúde bucal. 😁
+      </p>
+      <p style="font-size:14px;color:#555;line-height:1.8;">Seu sorriso é importante pra você — e pra nós também. 💙</p>
+    </div>
   </div>
 
-  <!-- MAIN -->
-  <div class="p-4 p-md-5 d-flex align-items-start">
+  <!-- ── DIREITA: card laranja ── -->
+  <div class="result-card-col p-4 p-md-5 d-flex align-items-start">
     <div class="result-card result-orange w-100">
+
+      <!-- Header (muda após confirmação) -->
       <div class="result-header">
-        <div class="result-icon">🎉</div>
-        <h3>Consulta reagendada com sucesso!<br>Parabéns, <span id="nomeCard">Marcos</span> — dia 30/10 às 9h 🎉</h3>
+        <div class="result-icon" id="cardIcon">📅</div>
+        <h3 id="cardTitulo">Escolha a nova data<br><span id="nomeCard" style="font-size:15px;opacity:.85;"></span></h3>
       </div>
+
+      <!-- Mini calendário (sempre visível) -->
       <div class="mini-cal">
         <div class="mini-cal-header">
-          <button>‹</button><span>Out. – Nov.</span><button>›</button>
+          <button id="prevMes">‹</button>
+          <span id="mesAno"></span>
+          <button id="nextMes">›</button>
         </div>
-        <div class="mini-cal-grid">
-          <div style="opacity:.7">Dom</div><div style="opacity:.7">Seg</div><div style="opacity:.7">Ter</div>
-          <div style="opacity:.7">Qua</div><div style="opacity:.7">Qui</div><div style="opacity:.7">Sex</div><div style="opacity:.7">Sáb</div>
-          <div class="mini-dia">28</div><div class="mini-dia">29</div><div class="mini-dia">30</div>
-          <div class="mini-dia">1</div><div class="mini-dia">2</div><div class="mini-dia">3</div><div class="mini-dia">4</div>
-          <div class="mini-dia">5</div><div class="mini-dia">6</div><div class="mini-dia">7</div>
-          <div class="mini-dia">8</div><div class="mini-dia">9</div><div class="mini-dia">10</div><div class="mini-dia">11</div>
-          <div class="mini-dia">12</div><div class="mini-dia">13</div><div class="mini-dia">14</div>
-          <div class="mini-dia">15</div><div class="mini-dia">16</div><div class="mini-dia">17</div><div class="mini-dia">18</div>
-          <div class="mini-dia">19</div><div class="mini-dia">20</div><div class="mini-dia">21</div>
-          <div class="mini-dia">22</div><div class="mini-dia">23</div><div class="mini-dia">24</div><div class="mini-dia">25</div>
-          <div class="mini-dia">26</div><div class="mini-dia">27</div><div class="mini-dia">28</div>
-          <div class="mini-dia">29</div><div class="mini-dia selecionado">30</div><div class="mini-dia">31</div><div class="mini-dia">1</div>
+        <div class="mini-cal-grid" id="miniCalGrid"></div>
+      </div>
+
+      <!-- PRÉ-confirmação: select horário + data display + botão -->
+      <div id="pre-confirm">
+        <select class="select-horario" id="horarioSelect">
+          <option>09:00 horas</option>
+          <option>10:00 horas</option>
+          <option>11:00 horas</option>
+          <option>14:00 horas</option>
+          <option>15:00 horas</option>
+        </select>
+        <div class="data-confirmada">
+          <span class="data-placeholder" id="dataPlaceholder">📅 Selecione um dia no calendário acima</span>
+          <div class="dc-row" id="dataRow" style="display:none;">
+            <div><strong>Data</strong><span id="dataDisplay">—</span></div>
+            <div><strong>Horário</strong><span id="horarioDisplay">—</span></div>
+          </div>
+        </div>
+        <button class="btn-confirmar-mini" onclick="confirmarReagendamento()">✅ Confirmar Reagendamento</button>
+      </div>
+
+      <!-- PÓS-confirmação: data/horário confirmados + smile points -->
+      <div id="pos-confirm" style="display:none;">
+        <div class="data-confirmada">
+          <div class="dc-row">
+            <div><strong>Data</strong><span id="dataConfirmada">—</span></div>
+            <div><strong>Horário</strong><span id="horarioConfirmado">—</span></div>
+          </div>
+        </div>
+        <div class="badge-confirmada">✅ Consulta confirmada</div>
+        <div class="smile-box mt-3">
+          <p style="font-size:12px;opacity:.85;margin-bottom:4px;">😁 Reagendar com antecedência também vale pontos!</p>
+          <div class="smile-pts-big">+150 Smile-Points</div>
+          <div class="smile-bar-wrap"><div class="smile-bar-fill" id="smileBar"></div></div>
+          <div class="smile-bar-labels">
+            <span>0 SP</span><span>2500 SP</span><span id="spAtual">—</span><span>5000 SP</span>
+          </div>
         </div>
       </div>
-      <div class="data-confirmada">
-        <div style="display:flex;gap:24px;">
-          <div><strong>Data</strong><br>30 de outubro de 2025</div>
-          <div><strong>Horário</strong><br>09:00 horas</div>
-        </div>
-        <div style="margin-top:12px;background:rgba(255,255,255,0.2);border-radius:8px;padding:10px;text-align:center;font-weight:800;">
-          ✅ Consulta confirmada
-        </div>
-      </div>
-      <div class="smile-box mt-3">
-        <p style="font-size:12px;opacity:0.85;margin-bottom:4px;">😁 Reagendar com antecedência também vale pontos!</p>
-        <div class="smile-pts-big">+150 Smile-Points</div>
-        <div class="smile-bar-wrap"><div class="smile-bar-fill" id="smileBar"></div></div>
-        <div class="smile-bar-labels"><span>0 SP</span><span>2500 SP</span><span>2950 SP</span><span>5000 SP</span></div>
-      </div>
+
     </div>
   </div>
 </div>
@@ -83,20 +225,162 @@
   renderNavbar('Dashboard');
 
   const user = JSON.parse(localStorage.getItem('cc_user') || '{"nome":"Marcos"}');
-  document.getElementById('nomeUser').textContent = user.nome;
   document.getElementById('nomeCard').textContent = user.nome;
 
-  const currentSP = parseInt(localStorage.getItem('cc_smile_points') || '2800');
-  const newSP = currentSP + 150;
-  localStorage.setItem('cc_smile_points', newSP);
+  // ── Estado do calendário ──
+  let currentYear  = 2025;
+  let currentMonth = 9; // outubro
+  let selectedDate = null;
 
-  setTimeout(() => {
-    const pct = Math.min((newSP / 5000) * 100, 100);
-    document.getElementById('smileBar').style.width = pct + '%';
-  }, 300);
+  const meses     = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const mesesFull = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const diasNomes = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const diasFull  = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
 
-  showToast('Consulta reagendada! +150 Smile-Points 🎊', 'info');
+  // Dia 22/out/2025 = consulta atual (bloqueado)
+  function isConsultaAtual(d, m, y) {
+    return d === 22 && m === 9 && y === 2025;
+  }
 
+  function renderCal() {
+    const nextMonth = currentMonth === 11 ? 0 : currentMonth + 1;
+    document.getElementById('mesAno').textContent = `${meses[currentMonth]} – ${meses[nextMonth]}`;
+
+    const firstDay    = new Date(currentYear, currentMonth, 1).getDay();
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const prevDays    = new Date(currentYear, currentMonth, 0).getDate();
+
+    const grid = document.getElementById('miniCalGrid');
+    grid.innerHTML = '';
+
+    // Cabeçalho dos dias da semana
+    diasNomes.forEach(n => {
+      const el = document.createElement('div');
+      el.className = 'mini-dia-nome';
+      el.textContent = n;
+      grid.appendChild(el);
+    });
+
+    // Dias do mês anterior
+    for (let i = firstDay - 1; i >= 0; i--) {
+      const el = document.createElement('div');
+      el.className = 'mini-dia outro-mes';
+      el.textContent = prevDays - i;
+      grid.appendChild(el);
+    }
+
+    // Dias do mês atual
+    for (let d = 1; d <= daysInMonth; d++) {
+      const el = document.createElement('div');
+      const bloqueado = isConsultaAtual(d, currentMonth, currentYear);
+
+      let cls = 'mini-dia';
+      if (bloqueado) cls += ' consulta-atual';
+      if (selectedDate && selectedDate.day === d && selectedDate.month === currentMonth && selectedDate.year === currentYear) {
+        cls += ' selecionado';
+      }
+      el.className = cls;
+      el.textContent = d;
+
+      if (!bloqueado) {
+        el.addEventListener('click', () => {
+          grid.querySelectorAll('.mini-dia').forEach(x => x.classList.remove('selecionado'));
+          el.classList.add('selecionado');
+          selectedDate = { day: d, month: currentMonth, year: currentYear };
+          atualizarDataDisplay();
+        });
+      }
+      grid.appendChild(el);
+    }
+
+    // Completar grid
+    const total     = firstDay + daysInMonth;
+    const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
+    for (let d = 1; d <= remaining; d++) {
+      const el = document.createElement('div');
+      el.className = 'mini-dia outro-mes';
+      el.textContent = d;
+      grid.appendChild(el);
+    }
+  }
+
+  function atualizarDataDisplay() {
+    if (!selectedDate) return;
+    const { day, month, year } = selectedDate;
+    const dateObj = new Date(year, month, day);
+    const dataLonga = `${day} de ${mesesFull[month]} de ${year}`;
+    const horario   = document.getElementById('horarioSelect').value;
+
+    document.getElementById('dataPlaceholder').style.display = 'none';
+    document.getElementById('dataRow').style.display = '';
+    document.getElementById('dataDisplay').textContent    = dataLonga;
+    document.getElementById('horarioDisplay').textContent = horario;
+  }
+
+  // Atualiza display ao trocar horário (se data já selecionada)
+  document.getElementById('horarioSelect').addEventListener('change', () => {
+    if (selectedDate) atualizarDataDisplay();
+  });
+
+  document.getElementById('prevMes').addEventListener('click', () => {
+    currentMonth--;
+    if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+    renderCal();
+  });
+  document.getElementById('nextMes').addEventListener('click', () => {
+    currentMonth++;
+    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+    renderCal();
+  });
+
+  renderCal();
+
+  // ── Confirmar reagendamento ──
+  function confirmarReagendamento() {
+    if (!selectedDate) {
+      showToast('Selecione uma nova data no calendário!', 'warning');
+      return;
+    }
+
+    const { day, month, year } = selectedDate;
+    const horario   = document.getElementById('horarioSelect').value;
+    const dataLonga = `${day} de ${mesesFull[month]} de ${year}`;
+    const dataResume = `${String(day).padStart(2,'0')}/${String(month+1).padStart(2,'0')} às ${horario.replace(' horas','')}`;
+
+    // Preencher confirmação
+    document.getElementById('dataConfirmada').textContent    = dataLonga;
+    document.getElementById('horarioConfirmado').textContent = horario;
+
+    // Atualizar header do card
+    document.getElementById('cardIcon').textContent = '🎉';
+    document.getElementById('cardTitulo').innerHTML =
+      `Consulta reagendada!<br><span style="font-size:15px;opacity:.85;">${user.nome} — dia ${dataResume} 🎉</span>`;
+
+    // Trocar textos do lado esquerdo
+    document.getElementById('texto-pre').style.display = 'none';
+    document.getElementById('texto-pos').style.display = '';
+    document.getElementById('nomeUser').textContent     = user.nome;
+    document.getElementById('novaDataTexto').textContent = `dia ${dataResume}`;
+
+    // Trocar seção do card
+    document.getElementById('pre-confirm').style.display = 'none';
+    document.getElementById('pos-confirm').style.display = '';
+
+    // Smile Points
+    const currentSP = parseInt(localStorage.getItem('cc_smile_points') || '2800');
+    const newSP = currentSP + 150;
+    localStorage.setItem('cc_smile_points', newSP);
+    document.getElementById('spAtual').textContent = newSP + ' SP';
+
+    setTimeout(() => {
+      document.getElementById('smileBar').style.width = Math.min((newSP / 5000) * 100, 100) + '%';
+    }, 300);
+
+    showToast('Consulta reagendada! +150 Smile-Points 🎊', 'success');
+    window.scrollTo(0, 0);
+  }
+
+  // ── Responsivo ──
   function checkLayout() {
     document.getElementById('layout').style.gridTemplateColumns = window.innerWidth < 768 ? '1fr' : '1fr 1fr';
   }

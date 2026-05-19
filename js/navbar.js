@@ -4,9 +4,9 @@ function renderNavbar(activePage) {
   const inicial = user.nome ? user.nome[0].toUpperCase() : 'M';
 
   const pages = [
-    { label: 'Dashboard', href: 'dashboard.html' },
-    { label: 'Calendário', href: 'calendario.html' },
-    { label: 'Smile Points', href: 'smile-points.html' },
+    { label: 'Dashboard',   href: 'dashboard.html'    },
+    { label: 'Calendário',  href: 'calendario.html'   },
+    { label: 'Smile Points',href: 'smile-points.html' },
   ];
 
   const links = pages.map(p =>
@@ -22,4 +22,21 @@ function renderNavbar(activePage) {
       <a href="../index.html" class="btn btn-sm btn-outline-secondary ms-2" style="font-size:12px;font-weight:700;">Sair</a>
     </div>
   `;
+
+  // Bottom navigation bar (visível apenas em mobile via CSS)
+  const bottomItems = [
+    { label: 'Home',   href: 'dashboard.html',    icon: '🏠', key: 'Dashboard'    },
+    { label: 'Agenda', href: 'calendario.html',   icon: '📅', key: 'Calendário'   },
+    { label: 'Pontos', href: 'smile-points.html', icon: '⭐', key: 'Smile Points' },
+    { label: 'Perfil', href: 'perfil.html',       icon: '👤', key: 'Perfil'       },
+  ];
+
+  const bottomNav = document.createElement('nav');
+  bottomNav.id = 'cc-bottom-nav';
+  bottomNav.innerHTML = bottomItems.map(item =>
+    `<a href="${item.href}" class="${activePage === item.key ? 'active' : ''}">
+      <span>${item.icon}</span><span>${item.label}</span>
+    </a>`
+  ).join('');
+  document.body.appendChild(bottomNav);
 }
